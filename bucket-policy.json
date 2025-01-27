@@ -1,0 +1,23 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "BlockPublicAcls",
+            "Effect": "Deny",
+            "Action": "s3:PutBucketAcl",
+            "Resource": "arn:aws:s3:::test-2025-924144197303"
+        },
+        {
+            "Sid": "BlockPublicPolicy",
+            "Effect": "Deny",
+            "Action": "s3:PutBucketPolicy",
+            "Resource": "arn:aws:s3:::test-2025-924144197303"
+        },
+        {
+            "Sid": "BlockPublicAccessForObjects",
+            "Effect": "Deny",
+            "Action": "s3:PutObjectAcl",
+            "Resource": "arn:aws:s3:::test-2025-924144197303/*"
+        }
+    ]
+}
