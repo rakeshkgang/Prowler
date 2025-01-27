@@ -7,7 +7,6 @@ on:
   workflow_dispatch: # Allows manual execution of the workflow
 
 permissions: write-all
- 
 
 jobs:
   prowler-scan:
@@ -18,13 +17,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Configure AWS credentials using OIDC
+      # Step 2: Set up AWS credentials using GitHub Secrets
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-          
+
       - name: Installing Prowler Dependencies
         run: |
           sudo apt-get update
@@ -33,13 +33,11 @@ jobs:
           sudo pip install --ignore-installed prowler matplotlib pandas numpy requests slack-sdk plotly
           prowler --version
           ulimit -n 4096
-          
+
       # Step 3: Set execute permission for the script
       - name: Make script executable
         run: chmod +x prowler_scan.sh
 
       # Step 4: Run the Prowler scan
       - name: Run Prowler Scan
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: ./prowler_scan.sh
