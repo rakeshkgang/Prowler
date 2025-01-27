@@ -25,7 +25,16 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
-
+          
+      - name: Installing Prowler Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install zip unzip python3-pip -y
+          sudo apt remove python3-urllib3 -y
+          sudo pip install --ignore-installed prowler matplotlib pandas numpy requests slack-sdk plotly
+          prowler --version
+          ulimit -n 4096
+          
       # Step 3: Set execute permission for the script
       - name: Make script executable
         run: chmod +x prowler_scan.sh
