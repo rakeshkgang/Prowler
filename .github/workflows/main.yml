@@ -33,3 +33,4 @@ jobs:
         
       - name: Run Prowler Scan
         run: ./prowler_scan.sh
+#
