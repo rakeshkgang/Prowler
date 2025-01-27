@@ -16,7 +16,7 @@ jobs:
       - name: Set up AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::924144197303:role/ProwlerExecRole  # Role with Prowler permissions
+          role-to-assume: arn:aws:iam::924144197303:role/github-oidc-terraform-role-21  # Role with Prowler permissions
           role-session-name: GitHubActionsSession
           aws-region: us-east-1  # Make sure to set your AWS region here, or use a secret if preferred
 
