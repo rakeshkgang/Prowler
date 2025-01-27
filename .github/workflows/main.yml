@@ -1,0 +1,36 @@
+name: Prowler Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # Role with Prowler permissions
+           aws-region: us-east-1 
+      - name: Installing Prowler Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install zip unzip python3-pip -y
+          sudo apt remove python3-urllib3 -y
+          sudo pip install --ignore-installed prowler matplotlib pandas numpy requests slack-sdk plotly
+          prowler --version
+          ulimit -n 4096
+          
+      - name: Make the script executable
+        run: chmod +x ./prowler_scan.sh
+        
+      - name: Run Prowler Scan
+        run: ./prowler_scan.sh
+
