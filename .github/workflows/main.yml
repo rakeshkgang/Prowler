@@ -27,6 +27,9 @@ jobs:
           sudo pip install --ignore-installed prowler matplotlib pandas numpy requests slack-sdk plotly
           prowler --version
           ulimit -n 4096
-
+          
+      - name: Make the script executable
+        run: chmod +x ./prowler_scan.sh
+        
       - name: Run Prowler Scan
         run: ./prowler_scan.sh
