@@ -6,9 +6,8 @@ on:
       - main
   workflow_dispatch: # Allows manual execution of the workflow
 
-permissions:
-  id-token: write
-  contents: read
+permissions: write-all
+ 
 
 jobs:
   prowler-scan:
