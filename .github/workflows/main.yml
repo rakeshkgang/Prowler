@@ -18,7 +18,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::924144197303:role/ProwlerExecRole  # Role with Prowler permissions
           role-session-name: GitHubActionsSession
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-1  # Make sure to set your AWS region here, or use a secret if preferred
 
       - name: Run Prowler Scan
         run: ./prowler_scan.sh
