@@ -44,7 +44,7 @@ PARALLELISM="16"
 
 # Specify accounts to be assessed using one of the supported methods:
 
-AWSACCOUNT_LIST="924144197303 851725370590" 
+AWSACCOUNT_LIST="924144197303" 
 # Specify the regions to have assessed (space separated) or use the keyword allregions to include all regions:
 REGION_LIST="allregions"
 # REGION_LIST="us-east-1 us-east-2"
