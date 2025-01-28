@@ -41,7 +41,8 @@ jobs:
             prowler aws \
               --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole \
               --output-directory /home/runner/work/prowler/prowler/output \
-              --output-modes html csv json-asff 
+              --output-modes html csv json-asff \
+              --ignore-exit-code-3
           }
           done
           aws s3 cp /home/runner/work/prowler/prowler/output/ "s3://test-2025-924144197303/" --recursive
