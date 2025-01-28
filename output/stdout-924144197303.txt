@@ -1,0 +1,350 @@
+[1;92m                         _
+ _ __  _ __ _____      _| | ___ _ __
+| '_ \| '__/ _ \ \ /\ / / |/ _ \ '__|
+| |_) | | | (_) \ V  V /| |  __/ |
+| .__/|_|  \___/ \_/\_/ |_|\___|_|v4.4.1
+|_|[34m the handy multi-cloud security tool
+
+[33mDate: 2025-01-28 16:41:07[0m
+
+
+[1mColor code for results:[0m
+- [33mMANUAL (Manual check)[0m
+- [32mPASS (Recommended value)[0m
+- [38;5;208mMUTED (Muted by muted list)[0m
+- [31mFAIL (Fix required)[0m
+            
+[1m-> [1mUsing the AWS credentials below:[0m[0m
+[1m[0m  · AWS-CLI Profile: [33mdefault[0m[1m[0m
+[1m[0m  · AWS Regions: [33mall[0m[1m[0m
+[1m[0m  · AWS Account: [33m924144197303[0m[1m[0m
+[1m[0m  · User Id: [33mAIDA5OK2JL235TY6X5JTC[0m[1m[0m
+[1m[0m  · Caller Identity ARN: [33marn:aws:iam::924144197303:user/test-user[0m[1m[0m
+[1m[0m  · Assumed Role ARN: [33m[arn:aws:iam::924144197303:role/ProwlerExecRole][0m[1m[0m
+
+[1m-> [1mUsing the following configuration:[0m[0m
+[1m[0m  · Config File: [33m/home/intel/.local/lib/python3.10/site-packages/prowler/config/config.yaml[0m[1m[0m
+[1m[0m  · Mutelist File: [33m/home/intel/.local/lib/python3.10/site-packages/prowler/config/aws_mutelist.yaml[0m[1m[0m
+[1m[0m  · Scanning unused services and resources: [33mFalse[0m[1m[0m
+
+[1mExecuting 457 checks, please wait...[0m
+
+Check ID: accessanalyzer_enabled - [35maccessanalyzer[33m [low][0m
+	[31mFAIL[0m ap-northeast-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m ap-northeast-2: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m ap-northeast-3: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m ap-south-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m ap-southeast-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m ap-southeast-2: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m ca-central-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m eu-central-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m eu-north-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m eu-west-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m eu-west-2: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m eu-west-3: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m sa-east-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m us-east-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m us-east-2: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m us-west-1: IAM Access Analyzer in account 924144197303 is not enabled.
+	[31mFAIL[0m us-west-2: IAM Access Analyzer in account 924144197303 is not enabled.
+
+
+Check ID: accessanalyzer_enabled_without_findings - [35maccessanalyzer[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: account_maintain_current_contact_details - [35maccount[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: account_maintain_different_contact_details_to_security_billing_and_operations - [35maccount[33m [medium][0m
+	[31mFAIL[0m us-east-1: SECURITY, BILLING and OPERATIONS contacts not found or they are not different between each other and between ROOT contact.
+
+
+Check ID: account_security_contact_information_is_registered - [35maccount[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: account_security_questions_are_registered_in_the_aws_account - [35maccount[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: acm_certificates_expiration_check - [35macm[33m [high][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: acm_certificates_transparency_logs_enabled - [35macm[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: acm_certificates_with_secure_key_algorithms - [35macm[33m [high][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigateway_restapi_authorizers_enabled - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigateway_restapi_client_certificate_enabled - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigateway_restapi_logging_enabled - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigateway_restapi_public - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigateway_restapi_public_with_authorizer - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigateway_restapi_waf_acl_attached - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigatewayv2_api_access_logging_enabled - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: apigatewayv2_api_authorizers_enabled - [35mapigateway[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: appstream_fleet_default_internet_access_disabled - [35mappstream[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: appstream_fleet_maximum_session_duration - [35mappstream[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: appstream_fleet_session_disconnect_timeout - [35mappstream[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: appstream_fleet_session_idle_disconnect_timeout - [35mappstream[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: athena_workgroup_encryption - [35mathena[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: athena_workgroup_enforce_configuration - [35mathena[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: autoscaling_find_secrets_ec2_launch_configuration - [35mautoscaling[33m [critical][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: autoscaling_group_multiple_az - [35mautoscaling[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_inside_vpc - [35mlambda[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_invoke_api_operations_cloudtrail_logging_enabled - [35mlambda[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_no_secrets_in_code - [35mlambda[33m [critical][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_no_secrets_in_variables - [35mlambda[33m [critical][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_not_publicly_accessible - [35mlambda[33m [critical][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_url_cors_policy - [35mlambda[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_url_public - [35mlambda[33m [high][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_using_supported_runtimes - [35mlambda[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: awslambda_function_vpc_multi_az - [35mlambda[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: backup_plans_exist - [35mbackup[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: backup_reportplans_exist - [35mbackup[33m [low][0m
+	[31mFAIL[0m us-east-1: No Backup Report Plan exist.
+
+
+Check ID: backup_vaults_encrypted - [35mbackup[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: backup_vaults_exist - [35mbackup[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudformation_stack_outputs_find_secrets - [35mcloudformation[33m [critical][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudformation_stacks_termination_protection_enabled - [35mcloudformation[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_custom_ssl_certificate - [35mcloudfront[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_default_root_object - [35mcloudfront[33m [high][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_field_level_encryption_enabled - [35mcloudfront[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_geo_restrictions_enabled - [35mcloudfront[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_https_enabled - [35mcloudfront[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_https_sni_enabled - [35mcloudfront[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_logging_enabled - [35mcloudfront[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_multiple_origin_failover_configured - [35mcloudfront[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_origin_traffic_encrypted - [35mcloudfront[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_s3_origin_access_control - [35mcloudfront[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_s3_origin_non_existent_bucket - [35mcloudfront[33m [high][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_using_deprecated_ssl_protocols - [35mcloudfront[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudfront_distributions_using_waf - [35mcloudfront[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_bucket_requires_mfa_delete - [35mcloudtrail[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_cloudwatch_logging_enabled - [35mcloudtrail[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_insights_exist - [35mcloudtrail[33m [low][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_kms_encryption_enabled - [35mcloudtrail[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_log_file_validation_enabled - [35mcloudtrail[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_logs_s3_bucket_access_logging_enabled - [35mcloudtrail[33m [medium][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_logs_s3_bucket_is_not_publicly_accessible - [35mcloudtrail[33m [critical][0m
+	[33mINFO[0m There are no resources
+
+
+Check ID: cloudtrail_multi_region_enabled - [35mcloudtrail[33m [high][0m
+	[31mFAIL[0m ap-northeast-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m ap-northeast-2: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m ap-northeast-3: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m ap-south-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m ap-southeast-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m ap-southeast-2: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m ca-central-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m eu-central-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m eu-north-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m eu-west-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m eu-west-2: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m eu-west-3: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m sa-east-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m us-east-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m us-east-2: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m us-west-1: No CloudTrail trails enabled with logging were found.
+	[31mFAIL[0m us-west-2: No CloudTrail trails enabled with logging were found.
+
+
+Check ID: cloudtrail_multi_region_enabled_logging_management_events - [35mcloudtrail[33m [low][0m
+	[31mFAIL[0m ap-northeast-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m ap-northeast-2: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m ap-northeast-3: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m ap-south-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m ap-southeast-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m ap-southeast-2: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m ca-central-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m eu-central-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m eu-north-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m eu-west-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m eu-west-2: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m eu-west-3: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m sa-east-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m us-east-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m us-east-2: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m us-west-1: No CloudTrail trails enabled and logging management events were found.
+	[31mFAIL[0m us-west-2: No CloudTrail trails enabled and logging management events were found.
+
+
+Check ID: cloudtrail_s3_dataevents_read_enabled - [35mcloudtrail[33m [low][0m
+	[31mFAIL[0m us-east-1: No CloudTrail trails have a data event to record all S3 object-level API operations.
+
+
+Check ID: cloudtrail_s3_dataevents_write_enabled - [35mcloudtrail[33m [low][0m
+	[31mFAIL[0m us-east-1: No CloudTrail trails have a data event to record all S3 object-level API operations.
+
+
+Check ID: cloudwatch_changes_to_network_acls_alarm_configured - [35mcloudwatch[33m [medium][0m
+	[31mFAIL[0m us-east-1: No CloudWatch log groups found with metric filters or alarms associated.
+
+
+Check ID: cloudwatch_changes_to_network_gateways_alarm_configured - [35mcloudwatch[33m [medium][0m
+	[31mFAIL[0m us-east-1: No CloudWatch log groups found with metric filters or alarms associated.
+
+
+Check ID: cloudwatch_changes_to_network_route_tables_alarm_configured - [35mcloudwatch[33m [medium][0m
+	[31mFAIL[0m us-east-1: No CloudWatch log groups found with metric filters or alarms associated.
+
+
+Check ID: cloudwatch_changes_to_vpcs_alarm_configured - [35mcloudwatch[33m [medium][0m
+	[31mFAIL[0m us-east-1: No CloudWatch log groups found with metric filters or alarms associated.
+
