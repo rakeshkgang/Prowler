@@ -94,11 +94,11 @@ jobs:
           
           # Run your Prowler scan script
           ./prowler_scan.sh 
-          env:
-            AWS_DEFAULT_REGION: us-east-1
-            AWS_REGION: us-east-1
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               
       - name: Upload Prowler reports to S3
         run: |
