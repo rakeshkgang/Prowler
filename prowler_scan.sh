@@ -44,7 +44,8 @@ PARALLELISM="16"
 
 # Prompt the user to enter AWS account IDs
 # read -p "Enter AWS account IDs (space-separated): " AWSACCOUNT_LIST
-AWSACCOUNT_LIST="924144197303 851725370590"
+ACCOUNT_ID="924144197303 "
+# 851725370590
 # Specify the regions to have assessed (space separated) or use the keyword allregions to include all regions:
 REGION_LIST="allregions"
 # REGION_LIST="us-east-1 us-east-2"
@@ -58,6 +59,8 @@ ACCOUNTID_WITH_NAME=true
 # S3 bucket where report will be uploaded
 S3_BUCKET="test-2025-924144197303"
 
+ROLE_ARN="arn:aws:iam::$ACCOUNT_ID:role/ProwlerExecRole"
+OUTPUT_DIR="/home/runner/work/prowler/prowler/output"
 # Consolidated output report without error filtering (Using .txt as 'CSV' output is semicolon delimited)
 CONSOLIDATED_REPORT=output/prowler-fullorgresults.txt
 
