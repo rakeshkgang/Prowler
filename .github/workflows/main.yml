@@ -59,69 +59,62 @@
 #           aws s3 ls s3://test-2025-924144197303/
 
 
-name: Prowler Scan
+name: Prowler AWS Security Scan
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  scan:
+  prowler-scan:
     runs-on: ubuntu-latest
+
     permissions: write-all
+       # Required to access the repository's code
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Configure AWS credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          role-session-name: github-actions
-          aws-region: us-east-1
-
-      - name: Installing Prowler Dependencies
+      - name: Set up AWS CLI
         run: |
-          sudo apt-get update
-          sudo apt install zip unzip python3-pip -y
-          sudo apt remove python3-urllib3 -y
-          sudo pip install --ignore-installed prowler matplotlib pandas numpy requests slack-sdk plotly
-          prowler --version
-          ulimit -n 4096
+          aws --version
 
-      - name: Running Security Audit on AWS
-        env:
-          ACCOUNT_ID: ${{ secrets.TARGET_ACCOUNT_ID }}
-          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
-          ROLE_ARN: arn:aws:iam::${{ secrets.TARGET_ACCOUNT_ID }}:role/ProwlerExecRole
+      - name: Assume Role with OIDC
+        id: assume-role
         run: |
-          echo "Starting Prowler Scan"
-          for ACCOUNTID in $ACCOUNT_ID; do
+          ROLE_ARN="${{ secrets.AWS_ROLE_ARN }}"  # Use the secret here
+          WEB_IDENTITY_TOKEN_FILE="/tmp/token"
 
-            echo "Assessing AWS Account: $ACCOUNTID"
-            ./prowler_scan.sh \
-              --role $ROLE_ARN \
-              --output-directory /home/runner/work/prowler/prowler/output \
-              --output-modes html csv json-asff \
-              --s3-bucket $S3_BUCKET
+          # Get OIDC token from GitHub Actions
+          curl -H "Authorization: Bearer $GITHUB_TOKEN" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/user \
+               | jq -r .login > $WEB_IDENTITY_TOKEN_FILE
 
-          # {
-          #   echo $ACCOUNTID
-          #   prowler aws --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole --output-formats csv json-asff html
-          # }
+          # Assume the role using OIDC
+          CREDS=$(aws sts assume-role-with-web-identity \
+            --role-arn $ROLE_ARN \
+            --role-session-name GitHubOIDCSession \
+            --web-identity-token file://$WEB_IDENTITY_TOKEN_FILE \
+            --duration-seconds 3600)
 
-          done
+          export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r .Credentials.AccessKeyId)
+          export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r .Credentials.SecretAccessKey)
+          export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r .Credentials.SessionToken)
 
-      - name: List Prowler Output
-        run: ls -l /home/runner/work/prowler/prowler/output
-
-      - name: Upload Prowler Results to S3
+      - name: Run Prowler scan
         run: |
-          aws s3 cp /home/runner/work/prowler/prowler/output/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive
+          # Make sure the necessary directories exist
+          mkdir -p output
 
-      - name: Debugging Outputs
+          # Run the Prowler scan (use the same script as local)
+          ./your-prowler-script.sh
+
+      - name: Upload Prowler reports to S3
         run: |
-          echo "Verifying S3 bucket contents:"
-          aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}/
+          aws s3 cp output/ "s3://$S3_BUCKET/" --recursive
