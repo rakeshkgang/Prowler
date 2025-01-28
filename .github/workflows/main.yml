@@ -9,7 +9,7 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     permissions: write-all
-
+#
     steps:
       - name: Check out code
         uses: actions/checkout@v4
