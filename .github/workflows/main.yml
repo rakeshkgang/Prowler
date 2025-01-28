@@ -65,9 +65,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   prowler-scan:
@@ -87,14 +84,18 @@ jobs:
           role-session-name: github-actions
           aws-region: us-east-1
 
+      - name: Make Prowler script executable
+        run: chmod +x ./prowler-script.sh  # Ensure the script is executable
+
       - name: Run Prowler scan
         run: |
           # Ensure output directory exists
           mkdir -p output
-
+          
           # Run your Prowler scan script
           ./prowler-script.sh
 
       - name: Upload Prowler reports to S3
         run: |
           aws s3 cp output/ "s3://$S3_BUCKET/" --recursive
+
