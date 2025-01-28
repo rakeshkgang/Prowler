@@ -1,65 +1,4 @@
-# name: Prowler Scan
-
-# on:
-#   push:
-#     branches:
-#       - main
-
-# jobs:
-#   scan:
-#     runs-on: ubuntu-latest
-#     permissions: write-all
-
-#     steps:
-#       - name: Check out code
-#         uses: actions/checkout@v4
-
-#       - name: Configure AWS credentials with OIDC
-#         uses: aws-actions/configure-aws-credentials@v4
-#         with:
-#           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-#           role-session-name: github-actions
-#           aws-region: us-east-1 
-
-#       - name: Installing Prowler Dependencies
-#         run: |
-#           sudo apt-get update
-#           sudo apt install zip unzip python3-pip -y
-#           sudo apt remove python3-urllib3 -y
-#           sudo pip install --ignore-installed prowler matplotlib pandas numpy requests slack-sdk plotly
-#           prowler --version
-#           ulimit -n 4096
-
-
-#       - name: Running Security Audit on AWS
-#         env:
-#           ACCOUNT_ID: ${{ secrets.TARGET_ACCOUNT_ID }}
-#         run: |
-#           for ACCOUNTID in $ACCOUNT_ID; do
-#           {
-#             echo $ACCOUNTID
-#             prowler aws \
-#               --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole \
-#               --output-directory /home/runner/work/prowler/prowler/output \
-#               --output-modes html csv json-asff 
-#           }
-#           done
-#           aws s3 cp /home/runner/work/prowler/prowler/output/ "s3://test-2025-924144197303/" --recursive
-
-#       - name: List Prowler Output
-#         run: ls -l /home/runner/work/prowler/prowler/output
-
-#       - name: Upload Prowler Results to S3
-#         run: |
-#           aws s3 cp /home/runner/work/prowler/prowler/output/ s3://test-2025-924144197303/ --recursive
-
-#       - name: Debugging Outputs
-#         run: |
-#           echo "Verifying S3 bucket contents:"
-#           aws s3 ls s3://test-2025-924144197303/
-
-
-name: Prowler AWS Security Scan
+name: Prowler Scan
 
 on:
   push:
@@ -67,40 +6,55 @@ on:
       - main
 
 jobs:
-  prowler-scan:
+  scan:
     runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write  # Grant permission to use OIDC tokens
+    permissions: write-all
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # ARN of the role to assume (use a secret for this)
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           role-session-name: github-actions
-          aws-region: us-east-1
+          aws-region: us-east-1 
 
-      - name: Make Prowler script executable
-        run: chmod +x ./prowler_scan.sh   # Ensure the script is executable
-
-      - name: Run Prowler scan
+      - name: Installing Prowler Dependencies
         run: |
-          # Ensure output directory exists
-          mkdir -p output
-          
-          # Run your Prowler scan script
-          ./prowler_scan.sh 
+          sudo apt-get update
+          sudo apt install zip unzip python3-pip -y
+          sudo apt remove python3-urllib3 -y
+          sudo pip install --ignore-installed prowler matplotlib pandas numpy requests slack-sdk plotly
+          prowler --version
+          ulimit -n 4096
+
+
+      - name: Running Security Audit on AWS
         env:
-          AWS_DEFAULT_REGION: us-east-1
-          AWS_REGION: us-east-1
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              
-      - name: Upload Prowler reports to S3
+          ACCOUNT_ID: ${{ secrets.TARGET_ACCOUNT_ID }}
         run: |
-          aws s3 cp output/ "s3://$S3_BUCKET/" --recursive
+          for ACCOUNTID in $ACCOUNT_ID; do
+          {
+            echo $ACCOUNTID
+            prowler aws \
+              --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole \
+              --output-directory /home/runner/work/prowler/prowler/output \
+              --output-modes html csv json-asff 
+          }
+          done
+          aws s3 cp /home/runner/work/prowler/prowler/output/ "s3://test-2025-924144197303/" --recursive
+
+      - name: List Prowler Output
+        run: ls -l /home/runner/work/prowler/prowler/output
+
+      - name: Upload Prowler Results to S3
+        run: |
+          aws s3 cp /home/runner/work/prowler/prowler/output/ s3://test-2025-924144197303/ --recursive
+
+      - name: Debugging Outputs
+        run: |
+          echo "Verifying S3 bucket contents:"
+          aws s3 ls s3://test-2025-924144197303/
 
