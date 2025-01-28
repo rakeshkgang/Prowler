@@ -240,5 +240,11 @@ echo "Prowler assessments completed"
 
 # Post-processing
 echo "Uploading Prowler reports to S3 bucket: $S3_BUCKET"
-aws s3 cp output/ "s3://$S3_BUCKET/" --recursive
 
+# Upload Prowler reports (csv, html, json, json-asff) to S3
+aws s3 cp $OUTPUT_DIR/*.csv s3://$S3_BUCKET/ --recursive
+aws s3 cp $OUTPUT_DIR/*.html s3://$S3_BUCKET/ --recursive
+aws s3 cp $OUTPUT_DIR/*.json s3://$S3_BUCKET/ --recursive
+aws s3 cp $OUTPUT_DIR/*.json-asff s3://$S3_BUCKET/ --recursive
+
+echo "Prowler reports uploaded to S3"

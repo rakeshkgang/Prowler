@@ -107,10 +107,10 @@ jobs:
               --output-modes html csv json-asff \
               --s3-bucket $S3_BUCKET
 
-          {
-            echo $ACCOUNTID
-            prowler aws --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole --output-formats csv json-asff html
-          }
+          # {
+          #   echo $ACCOUNTID
+          #   prowler aws --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole --output-formats csv json-asff html
+          # }
 
           done
 
