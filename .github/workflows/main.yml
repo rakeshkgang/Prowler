@@ -45,22 +45,6 @@ jobs:
           }
           done
           aws s3 cp /home/runner/work/prowler/prowler/output/ "s3://test-2025-924144197303/" --recursive
-      
-
-
-      - name: Running Security Audit on AWS
-        env:
-          ACCOUNT_ID: ${{ secrets.TARGET_ACCOUNT_ID }}
-        run: |
-          for ACCOUNTID in $ACCOUNT_ID; do
-          {
-            echo "Running Prowler for account $ACCOUNTID"
-            prowler aws \
-              --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole \
-              --output-directory /home/runner/work/prowler/prowler/output \
-              --output-modes html csv json-asff 
-          }
-          done
 
       - name: List Prowler Output
         run: ls -l /home/runner/work/prowler/prowler/output
