@@ -85,7 +85,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Make Prowler script executable
-        run: chmod +x ./prowler-script.sh  # Ensure the script is executable
+        run: chmod +x ./prowler_scan.sh   # Ensure the script is executable
 
       - name: Run Prowler scan
         run: |
@@ -93,7 +93,7 @@ jobs:
           mkdir -p output
           
           # Run your Prowler scan script
-          ./prowler-script.sh
+          ./prowler_scan.sh 
 
       - name: Upload Prowler reports to S3
         run: |
