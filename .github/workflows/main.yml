@@ -73,9 +73,8 @@ jobs:
   prowler-scan:
     runs-on: ubuntu-latest
 
-    permissions:
-      id-token: write  # Required to generate an OIDC token
-      contents: read  # Required to access the repository's code
+    permissions: write-all
+
 
     steps:
       - name: Checkout repository
@@ -89,9 +88,6 @@ jobs:
         id: assume-role
         run: |
           ROLE_ARN="${{ secrets.AWS_ROLE_ARN }}"  # Use the secret here
-
-          # Use the GitHub OIDC token automatically available to workflows
-          ID_TOKEN=$(echo $ACTIONS_ID_TOKEN_REQUEST_TOKEN)
 
           # Assume the role using the correct OIDC token (JWT)
           CREDS=$(aws sts assume-role-with-web-identity \
