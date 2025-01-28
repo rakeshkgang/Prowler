@@ -14,11 +14,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: aws configure
+      - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # Role with Prowler permissions
-           aws-region: us-east-1 
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: github-actions
+          aws-region: us-east-1 
       - name: Installing Prowler Dependencies
         run: |
           sudo apt-get update
