@@ -178,53 +178,44 @@
 # #
 
 #!/bin/bash
-#
-# Prowler multi-account assessment script:
-#   Used to drive the assessment of AWS accounts via Prowler, post-processing the output reports
-#   and optimizing the effort involved via automation.
-#
-# Script version: 2.98
+# ... [Previous comments]
 
-#########################################
-# Tunable Parameters
-#########################################
+# Adjust PARALLELISM to adjust the number of parallel scans
+PARALLELISM="16"
 
-PARALLELISM="16"  # Adjust the number of parallel scans
+# AWS account IDs
 ACCOUNT_ID="924144197303"
-REGION_LIST="allregions"  # Specify regions to assess or use "allregions" for all AWS regions
+REGION_LIST="allregions"
 IAM_CROSS_ACCOUNT_ROLE="ProwlerExecRole"
 ACCOUNTID_WITH_NAME=true
 S3_BUCKET="test-2025-924144197303"
 OUTPUT_DIR="/home/runner/work/prowler/prowler/output"
-CONSOLIDATED_REPORT="$OUTPUT_DIR/prowler-fullorgresults.txt"
-CONSOLIDATED_REPORT_FILTERED="$OUTPUT_DIR/prowler-fullorgresults-accessdeniedfiltered.txt"
+CONSOLIDATED_REPORT=output/prowler-fullorgresults.txt
+CONSOLIDATED_REPORT_FILTERED=output/prowler-fullorgresults-accessdeniedfiltered.txt
 FINDING_OUTPUT='--status FAIL'
 
-#########################################
-# Functions
-#########################################
+# Clean up Last Ran Prowler Reports if they exist
+rm -rf output/*
+mkdir -p output
 
-# Check for required tools
-check_tools() {
-    for tool in aws jq; do
-        if ! command -v $tool &> /dev/null; then
-            echo "Error: $tool is not installed or not in PATH. Please install it to proceed."
-            exit 1
-        fi
-    done
-}
-
-# Unset AWS environment variables
+# Unset AWS environment variables if they exist
 unset_aws_environment() {
     unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 }
 
-# Create output directory if it doesn't exist
-prepare_output_directory() {
-    mkdir -p "$OUTPUT_DIR" || { echo "Error: Failed to create output directory $OUTPUT_DIR"; exit 1; }
+# Assume Role in Management account and export session credentials
+management_account_session() {
+    AWSMANAGEMENT=$(aws organizations describe-organization --query Organization.MasterAccountId --output text)
+    echo "AWS organization Management account: $AWSMANAGEMENT"
+    unset_aws_environment
+    ROLE_SESSION_CREDS=$(aws sts assume-role --role-arn arn:"$AWSPARTITION":iam::"$AWSMANAGEMENT":role/"$IAM_CROSS_ACCOUNT_ROLE" --role-session-name ProwlerRun --output json)
+    AWS_ACCESS_KEY_ID=$(echo "$ROLE_SESSION_CREDS" | jq -r .Credentials.AccessKeyId)
+    AWS_SECRET_ACCESS_KEY=$(echo "$ROLE_SESSION_CREDS" | jq -r .Credentials.SecretAccessKey)
+    AWS_SESSION_TOKEN=$(echo "$ROLE_SESSION_CREDS" | jq -r .Credentials.SessionToken)
+    export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 }
 
-# Monitor background processes
+# Monitor the number of background processes
 process_monitor() {
     while [ "$(jobs | grep Running | wc -l)" -ge $PARALLELISM ]; do
         echo "Sleeping 20 seconds while waiting for active assessment queue to clear..."
@@ -232,53 +223,22 @@ process_monitor() {
     done
 }
 
-# Upload reports to S3
-upload_to_s3() {
-    echo "Uploading Prowler reports to S3 bucket: $S3_BUCKET"
-    aws s3 cp "$OUTPUT_DIR/" "s3://$S3_BUCKET/" --recursive
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to upload reports to S3 bucket $S3_BUCKET"
-        exit 1
-    fi
-}
+# Run Prowler for each account
+for ACCOUNTID in $ACCOUNT_ID; do
+    test "$(jobs | grep Running | wc -l)" -ge $PARALLELISM && process_monitor || true
+    {
+        unset_aws_environment
+        echo -e "Assessing AWS Account: $ACCOUNTID with all AWS regions using Role: $IAM_CROSS_ACCOUNT_ROLE on $(date)"
+        /usr/local/bin/prowler -R arn:$AWSPARTITION:iam::$ACCOUNTID:role/$IAM_CROSS_ACCOUNT_ROLE -M csv json-ocsf html ${FINDING_OUTPUT:-} -T 1200 --verbose | tee output/stdout-$ACCOUNTID.txt 1>/dev/null
+    } &
+done
 
-# Display account and region information
-display_config() {
-    echo "AWS Accounts being processed: $ACCOUNT_ID"
-    echo "AWS regions being processed: $REGION_LIST"
-    echo "Prowler Finding Output Mode: $FINDING_OUTPUT"
-    echo "Output Directory: $OUTPUT_DIR"
-}
-
-#########################################
-# Main Script Execution
-#########################################
-
-check_tools
-unset_aws_environment
-prepare_output_directory
-display_config
-
-# Clean up previous reports
-rm -rf "$OUTPUT_DIR/*"
-
-# Run Prowler assessments
-if [ "$REGION_LIST" == "allregions" ]; then
-    for ACCOUNTID in $ACCOUNT_ID; do
-        test "$(jobs | grep Running | wc -l)" -ge $PARALLELISM && process_monitor || true
-        {
-            unset_aws_environment
-            echo "Assessing AWS Account: $ACCOUNTID in all AWS regions using Role: $IAM_CROSS_ACCOUNT_ROLE on $(date)"
-            /usr/local/bin/prowler -R arn:aws:iam::$ACCOUNTID:role/$IAM_CROSS_ACCOUNT_ROLE -M csv json-ocsf html ${FINDING_OUTPUT:-} -T 1200 --verbose | tee "$OUTPUT_DIR/stdout-$ACCOUNTID.txt" 1>/dev/null
-        } &
-    done
-fi
-
-# Wait for all assessments to complete
+# Wait for all background processes
 wait
+echo ""
+echo "Prowler assessments completed"
 
-# Post-process and upload results
-upload_to_s3
+# Post-processing
+echo "Uploading Prowler reports to S3 bucket: $S3_BUCKET"
+aws s3 cp output/ "s3://$S3_BUCKET/" --recursive
 
-echo "Prowler assessments completed and reports uploaded to S3."
-exit 0
