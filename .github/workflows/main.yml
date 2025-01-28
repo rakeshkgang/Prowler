@@ -80,7 +80,8 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::924144197303:role/ProwlerExecRole
           aws-region: us-east-1
-          
+          role-session-name: GitHubActionsSession
+
       # Verify the AWS role assumption and identity
       - name: Verify AWS credentials
         run: |
