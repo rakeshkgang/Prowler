@@ -73,8 +73,8 @@ jobs:
   prowler-scan:
     runs-on: ubuntu-latest
 
-    permissions: write-all
-
+    permissions:
+      id-token: write  # Grant permission to use OIDC tokens
 
     steps:
       - name: Checkout repository
@@ -87,26 +87,29 @@ jobs:
       - name: Assume Role with OIDC
         id: assume-role
         run: |
-          ROLE_ARN="${{ secrets.AWS_ROLE_ARN }}"  # Use the secret here
+          ROLE_ARN="${{ secrets.AWS_ROLE_ARN }}"  # The ARN of the role to assume (use a secret for this)
 
-          # Assume the role using the correct OIDC token (JWT)
+          # Get the OIDC token that GitHub automatically creates
+          ID_TOKEN="${{ steps.assume-role.outputs.id_token }}"  # GitHub's automatically generated token
+
+          # Ensure the token is passed correctly to the AWS CLI command
           CREDS=$(aws sts assume-role-with-web-identity \
             --role-arn $ROLE_ARN \
             --role-session-name GitHubOIDCSession \
-            --web-identity-token $ID_TOKEN \
+            --web-identity-token "$ID_TOKEN" \
             --duration-seconds 3600)
 
-          # Export the AWS credentials from the assumed role
+          # Export AWS credentials from the assumed role to environment variables
           export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r .Credentials.AccessKeyId)
           export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r .Credentials.SecretAccessKey)
           export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r .Credentials.SessionToken)
 
       - name: Run Prowler scan
         run: |
-          # Make sure the necessary directories exist
+          # Ensure output directory exists
           mkdir -p output
 
-          # Run the Prowler scan (use the same script as local)
+          # Run your Prowler scan with the credentials from the previous step
           ./your-prowler-script.sh
 
       - name: Upload Prowler reports to S3
