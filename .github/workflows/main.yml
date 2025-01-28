@@ -73,8 +73,9 @@ jobs:
   prowler-scan:
     runs-on: ubuntu-latest
 
-    permissions: write-all
-       # Required to access the repository's code
+    permissions:
+      id-token: write  # Required to generate an OIDC token
+      contents: read  # Required to access the repository's code
 
     steps:
       - name: Checkout repository
@@ -88,21 +89,18 @@ jobs:
         id: assume-role
         run: |
           ROLE_ARN="${{ secrets.AWS_ROLE_ARN }}"  # Use the secret here
-          WEB_IDENTITY_TOKEN_FILE="/tmp/token"
 
-          # Get OIDC token from GitHub Actions
-          curl -H "Authorization: Bearer $GITHUB_TOKEN" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/user \
-               | jq -r .login > $WEB_IDENTITY_TOKEN_FILE
+          # Use the GitHub OIDC token automatically available to workflows
+          ID_TOKEN=$(echo $ACTIONS_ID_TOKEN_REQUEST_TOKEN)
 
-          # Assume the role using OIDC
+          # Assume the role using the correct OIDC token (JWT)
           CREDS=$(aws sts assume-role-with-web-identity \
             --role-arn $ROLE_ARN \
             --role-session-name GitHubOIDCSession \
-            --web-identity-token file://$WEB_IDENTITY_TOKEN_FILE \
+            --web-identity-token $ID_TOKEN \
             --duration-seconds 3600)
 
+          # Export the AWS credentials from the assumed role
           export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r .Credentials.AccessKeyId)
           export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r .Credentials.SecretAccessKey)
           export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r .Credentials.SessionToken)
