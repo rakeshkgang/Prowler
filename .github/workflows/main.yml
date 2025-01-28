@@ -38,10 +38,7 @@ jobs:
           for ACCOUNTID in $ACCOUNT_ID; do
           {
             echo $ACCOUNTID
-            prowler aws \
-              --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole \
-              --output-directory /home/runner/work/prowler/prowler/output \
-              --output-modes html csv json-asff 
+            prowler aws --role arn:aws:iam::$ACCOUNTID:role/ProwlerExecRole -z -M csv json html
           }
           done
           aws s3 cp /home/runner/work/prowler/prowler/output/ "s3://test-2025-924144197303/" --recursive
