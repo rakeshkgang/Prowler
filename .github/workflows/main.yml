@@ -19,7 +19,8 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           role-session-name: github-actions
-
+          aws-region: us-east-1 
+            
       - name: Installing Prowler Dependencies
         run: |
           sudo apt-get update
