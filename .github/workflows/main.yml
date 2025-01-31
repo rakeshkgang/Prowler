@@ -19,8 +19,8 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           role-session-name: github-actions
-          aws-region: us-east-1 
-            
+          aws-region: us-east-1
+
       - name: Installing Prowler Dependencies
         run: |
           sudo apt-get update
@@ -44,16 +44,16 @@ jobs:
               --ignore-exit-code-3
           }
           done
-          aws s3 cp /home/runner/work/prowler/prowler/output/ "s3://tempo-prowler-sandbox-us1/" --recursive
+          aws s3 cp /home/runner/work/prowler/prowler/output/ "s3://${{ secrets.S3_BUCKET_NAME }}/" --recursive
 
       - name: List Prowler Output
         run: ls -l /home/runner/work/prowler/prowler/output
 
       - name: Upload Prowler Results to S3
         run: |
-          aws s3 cp /home/runner/work/prowler/prowler/output/ s3://tempo-prowler-sandbox-us1/ --recursive
+          aws s3 cp /home/runner/work/prowler/prowler/output/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive
 
       - name: Debugging Outputs
         run: |
           echo "Verifying S3 bucket contents:"
-          aws s3 ls s3://tempo-prowler-sandbox-us1/
+          aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}/
